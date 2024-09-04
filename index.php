@@ -1,6 +1,6 @@
 <?php
 // Danh sách các IP bị blacklist
-$blacklist_ips = ['171.245.120.25', '113.21.132.1'];
+$blacklist_ips = ['171.245.120.25'];
 
 // Lấy IP của người dùng
 function getUserIP() {
